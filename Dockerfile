@@ -2,14 +2,14 @@ FROM java:openjdk-8-jdk
 
 ENV TZ=Asia/Tokyo
 
-ENV VERSION=2.6.2-1-GA
+ENV RUNDECK_VERSION=2.6.2-1-GA
 
 RUN apt-get update \
     && apt-get install -y uuid-runtime
 
-RUN wget -nv "http://dl.bintray.com/rundeck/rundeck-deb/rundeck-$VERSION.deb" \
-    && dpkg -i rundeck-$VERSION.deb \
-    && rm -f rundeck-$VERSION.deb
+RUN wget -nv "http://dl.bintray.com/rundeck/rundeck-deb/rundeck-${RUNDECK_VERSION}.deb" \
+    && dpkg -i rundeck-${RUNDECK_VERSION}.deb \
+    && rm -f rundeck-${RUNDECK_VERSION}.deb
 
 WORKDIR /var/log/rundeck/var/lib/rundeck/libext
 RUN wget -nv "https://github.com/rundeck-plugins/rundeck-ec2-nodes-plugin/releases/download/v1.5.1/rundeck-ec2-nodes-plugin-1.5.1.jar" \
