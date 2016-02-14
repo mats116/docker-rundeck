@@ -26,7 +26,7 @@ CMD sed -i -e "/^framework.server.name/c\framework.server.name = ${HOSTNAME}" /e
 
     && echo "\n# Rundeck S3 Log Storage Plugin" >> /etc/rundeck/framework.properties \
     && echo "framework.plugin.ExecutionFileStorage.org.rundeck.amazon-s3.bucket = ${RUNDECK_S3_BUCKET}" >> /etc/rundeck/framework.properties \
-    && echo "framework.plugin.ExecutionFileStorage.org.rundeck.amazon-s3.path = ${RUNDECK_S3_PATH}" >> /etc/rundeck/framework.properties \
+    && echo "framework.plugin.ExecutionFileStorage.org.rundeck.amazon-s3.path = logs/${job.project}/${job.id}/${job.execid}.log" >> /etc/rundeck/framework.properties \
     && echo "framework.plugin.ExecutionFileStorage.org.rundeck.amazon-s3.region = ${RUNDECK_S3_REGION}" >> /etc/rundeck/framework.properties \
 
     && sed -i -e "/^grails.serverURL/c\grails.serverURL = ${RUNDECK_URL}" /etc/rundeck/rundeck-config.properties \
