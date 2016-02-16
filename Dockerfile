@@ -15,7 +15,7 @@ RUN wget  "https://github.com/rundeck-plugins/rundeck-ec2-nodes-plugin/releases/
     && wget  "https://github.com/rundeck-plugins/rundeck-s3-log-plugin/releases/download/v1.0.0/rundeck-s3-log-plugin-1.0.0.jar" \
     && wget  "https://github.com/higanworks/rundeck-slack-incoming-webhook-plugin/releases/download/v0.5.dev/rundeck-slack-incoming-webhook-plugin-0.5.jar"
 
-ENV RUNDECK_PORT=4180
+ENV RUNDECK_PORT=4440
 ENV RUNDECK_S3_REGION=ap-northeast-1
 
 WORKDIR /var/log/rundeck
