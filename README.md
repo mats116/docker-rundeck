@@ -18,6 +18,8 @@ RUNDECK_MYSQL_PASSWORD:
 ## How to use
 
 ```bash
+$ docker build -t rundeck .
+
 $ docker run -p 4440:4440 \
              -e "RUNDECK_PORT=4440" \
              -e "RUNDECK_URL=https://rundeck.example.com" \
@@ -26,4 +28,5 @@ $ docker run -p 4440:4440 \
              -e "RUNDECK_MYSQL_DATABASE=rundeck" \
              -e "RUNDECK_MYSQL_USERNAME=rundeck" \
              -e "RUNDECK_MYSQL_PASSWORD"=rundeck \
-             -t mats116/rundeck:latest
+             -t rundeck
+```
