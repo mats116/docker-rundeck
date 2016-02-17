@@ -6,14 +6,14 @@ ENV RUNDECK_VERSION=2.6.2-1-GA
 RUN apt-get update \
     && apt-get install -y uuid-runtime
 
-RUN wget -nv "http://dl.bintray.com/rundeck/rundeck-deb/rundeck-${RUNDECK_VERSION}.deb" \
+RUN wget "http://dl.bintray.com/rundeck/rundeck-deb/rundeck-${RUNDECK_VERSION}.deb" \
     && dpkg -i rundeck-${RUNDECK_VERSION}.deb \
     && rm -f rundeck-${RUNDECK_VERSION}.deb
 
 WORKDIR /var/log/rundeck/var/lib/rundeck/libext
-RUN wget  "https://github.com/rundeck-plugins/rundeck-ec2-nodes-plugin/releases/download/v1.5.1/rundeck-ec2-nodes-plugin-1.5.1.jar" \
-    && wget  "https://github.com/rundeck-plugins/rundeck-s3-log-plugin/releases/download/v1.0.0/rundeck-s3-log-plugin-1.0.0.jar" \
-    && wget  "https://github.com/higanworks/rundeck-slack-incoming-webhook-plugin/releases/download/v0.5.dev/rundeck-slack-incoming-webhook-plugin-0.5.jar"
+RUN wget "https://github.com/rundeck-plugins/rundeck-ec2-nodes-plugin/releases/download/v1.5.1/rundeck-ec2-nodes-plugin-1.5.1.jar" \
+    && wget "https://github.com/rundeck-plugins/rundeck-s3-log-plugin/releases/download/v1.0.0/rundeck-s3-log-plugin-1.0.0.jar" \
+    && wget "https://github.com/higanworks/rundeck-slack-incoming-webhook-plugin/releases/download/v0.5.dev/rundeck-slack-incoming-webhook-plugin-0.5.jar"
 
 ENV RUNDECK_PORT=4440
 ENV RUNDECK_S3_REGION=ap-northeast-1
