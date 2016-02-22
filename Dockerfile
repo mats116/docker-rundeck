@@ -9,7 +9,8 @@ RUN apt-get update \
 ENV RUNDECK_VERSION=2.6.2-1-GA
 RUN wget "http://dl.bintray.com/rundeck/rundeck-deb/rundeck-${RUNDECK_VERSION}.deb" \
     && dpkg -i rundeck-${RUNDECK_VERSION}.deb \
-    && rm -f rundeck-${RUNDECK_VERSION}.deb
+    && rm -f rundeck-${RUNDECK_VERSION}.deb \
+    && mkdir -m 700 /root/.ssh
 
 # install rundeck plugins
 WORKDIR /var/lib/rundeck/libext
@@ -22,12 +23,16 @@ ENV VAGRANT_VERSION=1.8.1
 RUN wget "https://releases.hashicorp.com/vagrant/${VAGRANT_VERSION}/vagrant_${VAGRANT_VERSION}_x86_64.deb" \
     && dpkg -i vagrant_${VAGRANT_VERSION}_x86_64.deb \
     && rm -f vagrant_${VAGRANT_VERSION}_x86_64.deb \
-    && vagrant plugin install vagrant-aws
+    && vagrant plugin install vagrant-aws \
+    && vagrant box add dummy "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box"
+
+WORKDIR /var/lib/rundeck
+
+COPY Vagrantfile Vagrantfile
+COPY id_rsa /root/.ssh/id_rsa
 
 ENV RUNDECK_PORT=4440
 ENV RUNDECK_S3_REGION=ap-northeast-1
-
-WORKDIR /var/log/rundeck
 
 CMD sed -i -e "/^framework.server.name/c\framework.server.name = ${HOSTNAME}" /etc/rundeck/framework.properties \
     && sed -i -e "/^framework.server.hostname/c\framework.server.hostname = ${HOSTNAME}" /etc/rundeck/framework.properties \
