@@ -20,4 +20,14 @@ Vagrant.configure(2) do |config|
     override.ssh.username = "ec2-user"
     override.ssh.private_key_path = "/root/.ssh/id_rsa"
   end
+
+  # test用VM
+  config.vm.define "test" do |define|
+    define.vm.provider "aws" do |aws|
+      aws.tags = {
+        'Name' => 'test'
+      }
+    end
+  end
+
 end
