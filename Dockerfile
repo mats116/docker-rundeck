@@ -28,9 +28,6 @@ RUN wget "https://releases.hashicorp.com/vagrant/${VAGRANT_VERSION}/vagrant_${VA
 
 WORKDIR /var/lib/rundeck
 
-COPY Vagrantfile Vagrantfile
-COPY id_rsa /root/.ssh/id_rsa
-
 ENV RUNDECK_PORT=4440
 ENV RUNDECK_S3_REGION=ap-northeast-1
 
