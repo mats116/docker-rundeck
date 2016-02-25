@@ -53,4 +53,4 @@ CMD sed -i -e "/^framework.server.name/c\framework.server.name = ${HOSTNAME}" /e
     && echo "# Enables S3 for Log storage" >> /etc/rundeck/rundeck-config.properties \
     && echo "rundeck.execution.logs.fileStoragePlugin = org.rundeck.amazon-s3" >> /etc/rundeck/rundeck-config.properties \
     && . /etc/rundeck/profile \
-    && /usr/bin/java ${RDECK_JVM} -cp ${BOOTSTRAP_CP} com.dtolabs.rundeck.RunServer /var/lib/rundeck ${RUNDECK_PORT}
+    && /usr/bin/java ${RDECK_JVM} -Drundeck.jetty.connector.forwarded=true -cp ${BOOTSTRAP_CP} com.dtolabs.rundeck.RunServer /var/lib/rundeck ${RUNDECK_PORT}
