@@ -53,20 +53,9 @@ CMD sed -i -e "/^framework.server.name/c\framework.server.name = ${HOSTNAME}" /e
     && echo "\n# Enables DB for Project configuration storage" >> /etc/rundeck/rundeck-config.properties \
     && echo "rundeck.projectsStorageType = db" >> /etc/rundeck/rundeck-config.properties \
 
-    && echo "\n# Encryption for project config storage" >> /etc/rundeck/rundeck-config.properties \
-    && echo "rundeck.config.storage.converter.1.type = jasypt-encryption" >> /etc/rundeck/rundeck-config.properties \
-    && echo "rundeck.config.storage.converter.1.path = projects" >> /etc/rundeck/rundeck-config.properties \
-    && echo "rundeck.config.storage.converter.1.config.password = mysecret" >> /etc/rundeck/rundeck-config.properties \
-
     && echo "\n# Enable DB for Key Storage" >> /etc/rundeck/rundeck-config.properties \
     && echo "rundeck.storage.provider.1.type = db" >> /etc/rundeck/rundeck-config.properties \
     && echo "rundeck.storage.provider.1.path = keys" >> /etc/rundeck/rundeck-config.properties \
-
-    && echo "\n# Encryption for Key Storage" >> /etc/rundeck/rundeck-config.properties \
-    && echo "rundeck.storage.converter.1.type = jasypt-encryption" >> /etc/rundeck/rundeck-config.properties \
-    && echo "rundeck.storage.converter.1.path = keys" >> /etc/rundeck/rundeck-config.properties \
-    && echo "rundeck.storage.converter.1.config.password = mysecret" >> /etc/rundeck/rundeck-config.properties \
-    && echo "rundeck.clusterMode.enabled = true" >> /etc/rundeck/rundeck-config.properties \
 
     && echo "\n# Enables S3 for Log storage" >> /etc/rundeck/rundeck-config.properties \
     && echo "rundeck.execution.logs.fileStoragePlugin = org.rundeck.amazon-s3" >> /etc/rundeck/rundeck-config.properties \
