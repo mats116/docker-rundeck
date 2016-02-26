@@ -4,8 +4,37 @@ export RDECK_BASE
 JAVA_CMD=java
 RUNDECK_TEMPDIR=/tmp/rundeck
 
-RDECK_HTTP_PORT=4440
-RDECK_HTTPS_PORT=4443
+#RDECK_HTTP_PORT=4440
+#RDECK_HTTPS_PORT=4443
+
+# Change hostname & URL
+sed -i -e "/^framework.server.name/c\framework.server.name = ${HOSTNAME}" /etc/rundeck/framework.properties
+sed -i -e "/^framework.server.hostname/c\framework.server.hostname = ${HOSTNAME}" /etc/rundeck/framework.properties
+sed -i -e "/^framework.server.port/c\framework.server.port = ${RUNDECK_PORT}" /etc/rundeck/framework.properties
+sed -i -e "/^framework.server.url/c\framework.server.url = ${RUNDECK_URL}" /etc/rundeck/framework.properties
+sed -i -e "/^grails.serverURL/c\grails.serverURL=${RUNDECK_URL}" /etc/rundeck/rundeck-config.properties
+
+# Enable Cluster Mode
+echo "rundeck.server.uuid = $(uuidgen)" >> /etc/rundeck/framework.properties
+echo "rundeck.clusterMode.enabled = true" >> /etc/rundeck/rundeck-config.properties
+
+# Use MySQL
+sed -i -e "/^dataSource.url/c\dataSource.url = jdbc:mysql://${RUNDECK_MYSQL_HOST}/${RUNDECK_MYSQL_DATABASE}?autoReconnect=true" /etc/rundeck/rundeck-config.properties
+echo "dataSource.username = ${RUNDECK_MYSQL_USERNAME}" >> /etc/rundeck/rundeck-config.properties
+echo "dataSource.password = ${RUNDECK_MYSQL_PASSWORD}" >> /etc/rundeck/rundeck-config.properties
+
+# Enables DB for Project configuration storage
+echo "rundeck.projectsStorageType = db" >> /etc/rundeck/rundeck-config.properties
+
+# Enable DB for Key Storage
+echo "rundeck.storage.provider.1.type = db" >> /etc/rundeck/rundeck-config.properties
+echo "rundeck.storage.provider.1.path = keys" >> /etc/rundeck/rundeck-config.properties
+
+# Rundeck S3 Log Storage Plugin
+echo "framework.plugin.ExecutionFileStorage.org.rundeck.amazon-s3.bucket = ${RUNDECK_S3_BUCKET}" >> /etc/rundeck/framework.properties
+echo 'framework.plugin.ExecutionFileStorage.org.rundeck.amazon-s3.path = logs/${job.project}/${job.id}/${job.execid}.log' >> /etc/rundeck/framework.properties
+echo "framework.plugin.ExecutionFileStorage.org.rundeck.amazon-s3.region = ${RUNDECK_S3_REGION}" >> /etc/rundeck/framework.properties
+echo "rundeck.execution.logs.fileStoragePlugin = org.rundeck.amazon-s3" >> /etc/rundeck/rundeck-config.properties
 
 #
 # If JAVA_HOME is set, then add it to home and set JAVA_CMD to use the version specified in that
@@ -32,7 +61,8 @@ export RDECK_JVM="-Djava.security.auth.login.config=/etc/rundeck/jaas-loginmodul
 	-Drdeck.projects=/var/rundeck/projects \
 	-Drdeck.runlogs=/var/lib/rundeck/logs \
 	-Drundeck.config.location=/etc/rundeck/rundeck-config.properties \
-	-Djava.io.tmpdir=$RUNDECK_TEMPDIR"
+	-Djava.io.tmpdir=$RUNDECK_TEMPDIR \
+	-Drundeck.jetty.connector.forwarded=true"
 #
 # Set min/max heap size
 #
