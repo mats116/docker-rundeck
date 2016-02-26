@@ -9,8 +9,7 @@ RUN apt-get update \
 ENV RUNDECK_VERSION=2.6.2-1-GA
 RUN wget "http://dl.bintray.com/rundeck/rundeck-deb/rundeck-${RUNDECK_VERSION}.deb" \
     && dpkg -i rundeck-${RUNDECK_VERSION}.deb \
-    && rm -f rundeck-${RUNDECK_VERSION}.deb \
-    && chown rundeck:rundeck /etc/rundeck
+    && rm -f rundeck-${RUNDECK_VERSION}.deb
 
 # install rundeck plugins
 WORKDIR /var/lib/rundeck/libext
@@ -25,8 +24,6 @@ RUN wget "https://releases.hashicorp.com/vagrant/${VAGRANT_VERSION}/vagrant_${VA
     && rm -f vagrant_${VAGRANT_VERSION}_x86_64.deb \
     && vagrant plugin install vagrant-aws \
     && vagrant box add dummy "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box"
-
-USER rundeck
 
 WORKDIR /var/lib/rundeck
 
@@ -58,4 +55,4 @@ CMD sed -i -e "/^framework.server.name/c\framework.server.name = ${HOSTNAME}" /e
     && echo "# Enables S3 for Log storage" >> /etc/rundeck/rundeck-config.properties \
     && echo "rundeck.execution.logs.fileStoragePlugin = org.rundeck.amazon-s3" >> /etc/rundeck/rundeck-config.properties \
     && . /etc/rundeck/profile \
-    && /usr/bin/java ${RDECK_JVM} -Drundeck.jetty.connector.forwarded=true -cp ${BOOTSTRAP_CP} com.dtolabs.rundeck.RunServer /var/lib/rundeck ${RUNDECK_PORT}
+    && java ${RDECK_JVM} -Drundeck.jetty.connector.forwarded=true -cp ${BOOTSTRAP_CP} com.dtolabs.rundeck.RunServer /var/lib/rundeck ${RUNDECK_PORT}
