@@ -9,7 +9,8 @@ RUN apt-get update \
 ENV RUNDECK_VERSION=2.6.2-1-GA
 RUN wget "http://dl.bintray.com/rundeck/rundeck-deb/rundeck-${RUNDECK_VERSION}.deb" \
     && dpkg -i rundeck-${RUNDECK_VERSION}.deb \
-    && rm -f rundeck-${RUNDECK_VERSION}.deb
+    && rm -f rundeck-${RUNDECK_VERSION}.deb \
+    && chown rundeck:rundeck /etc/rundeck
 
 # install rundeck plugins
 WORKDIR /var/lib/rundeck/libext
