@@ -27,32 +27,13 @@ RUN wget "https://releases.hashicorp.com/vagrant/${VAGRANT_VERSION}/vagrant_${VA
 
 WORKDIR /var/lib/rundeck
 
+COPY profile.sh /etc/rundeck/profile
+
 ENV RUNDECK_PORT=4440 \
     RUNDECK_MYSQL_DATABASE=rundeck \
     RUNDECK_MYSQL_USERNAME=rundeck \
     RUNDECK_MYSQL_PASSWORD=rundeck \
     RUNDECK_S3_REGION=ap-northeast-1
 
-CMD sed -i -e "/^framework.server.name/c\framework.server.name = ${HOSTNAME}" /etc/rundeck/framework.properties \
-    && sed -i -e "/^framework.server.hostname/c\framework.server.hostname = ${HOSTNAME}" /etc/rundeck/framework.properties \
-    && sed -i -e "/^framework.server.port/c\framework.server.port = ${RUNDECK_PORT}" /etc/rundeck/framework.properties \
-    && sed -i -e "/^framework.server.url/c\framework.server.url = ${RUNDECK_URL}" /etc/rundeck/framework.properties \
-    && echo "rundeck.server.uuid = $(uuidgen)" >> /etc/rundeck/framework.properties \
-    && echo "rundeck.clusterMode.enabled = true" >> /etc/rundeck/rundeck-config.properties \
-    && echo "# Rundeck S3 Log Storage Plugin" >> /etc/rundeck/framework.properties \
-    && echo "framework.plugin.ExecutionFileStorage.org.rundeck.amazon-s3.bucket = ${RUNDECK_S3_BUCKET}" >> /etc/rundeck/framework.properties \
-    && echo 'framework.plugin.ExecutionFileStorage.org.rundeck.amazon-s3.path = logs/${job.project}/${job.id}/${job.execid}.log' >> /etc/rundeck/framework.properties \
-    && echo "framework.plugin.ExecutionFileStorage.org.rundeck.amazon-s3.region = ${RUNDECK_S3_REGION}" >> /etc/rundeck/framework.properties \
-    && sed -i -e "/^grails.serverURL/c\grails.serverURL=${RUNDECK_URL}" /etc/rundeck/rundeck-config.properties \
-    && sed -i -e "/^dataSource.url/c\dataSource.url = jdbc:mysql://${RUNDECK_MYSQL_HOST}/${RUNDECK_MYSQL_DATABASE}?autoReconnect=true" /etc/rundeck/rundeck-config.properties \
-    && echo "dataSource.username = ${RUNDECK_MYSQL_USERNAME}" >> /etc/rundeck/rundeck-config.properties \
-    && echo "dataSource.password = ${RUNDECK_MYSQL_PASSWORD}" >> /etc/rundeck/rundeck-config.properties \
-    && echo "# Enables DB for Project configuration storage" >> /etc/rundeck/rundeck-config.properties \
-    && echo "rundeck.projectsStorageType = db" >> /etc/rundeck/rundeck-config.properties \
-    && echo "# Enable DB for Key Storage" >> /etc/rundeck/rundeck-config.properties \
-    && echo "rundeck.storage.provider.1.type = db" >> /etc/rundeck/rundeck-config.properties \
-    && echo "rundeck.storage.provider.1.path = keys" >> /etc/rundeck/rundeck-config.properties \
-    && echo "# Enables S3 for Log storage" >> /etc/rundeck/rundeck-config.properties \
-    && echo "rundeck.execution.logs.fileStoragePlugin = org.rundeck.amazon-s3" >> /etc/rundeck/rundeck-config.properties \
-    && . /etc/rundeck/profile \
-    && java ${RDECK_JVM} -Drundeck.jetty.connector.forwarded=true -cp ${BOOTSTRAP_CP} com.dtolabs.rundeck.RunServer /var/lib/rundeck ${RUNDECK_PORT}
+CMD . /etc/rundeck/profile \
+    && java ${RDECK_JVM} -cp ${BOOTSTRAP_CP} com.dtolabs.rundeck.RunServer /var/lib/rundeck ${RUNDECK_PORT}
